@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "installing OPENGL"
+sudo apt-get install freeglut3 freeglut3-dev libglu1-mesa-dev mesa-common-dev
+echo "OPENGL installed"

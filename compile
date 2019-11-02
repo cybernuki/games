@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -e "\e[32mCompiling\e[0m"
+gcc *.c -lglut -lGL -lGLU
+echo "Done"

@@ -1,0 +1,3 @@
+#!/bin/bash
+file='"\C-p":'$PWD'/a.out'
+. bind -x $file
