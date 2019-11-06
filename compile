@@ -1,4 +1,4 @@
 #!/bin/bash
 echo -e "\e[32mCompiling\e[0m"
-gcc *.c -lglut -lGL -lGLU
+gcc -Wall -Wextra -Werror -pedantic *.c -lglut -lGL -lGLU -lm
 echo "Done"

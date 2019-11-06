@@ -1,0 +1,17 @@
+1- create object reader
+--read text file line by line ~
+--check for type of data~
+--set values to an structure including linked lists for:
+      vertex, poligon positions, color
+      transformation matrix.~
+
+2- create camara and viewport
+--create the functions to transform each one
+
+3- create poligon drawer
+--transform each vertex
+--make projection for each vertex
+--join all projected vertex
+--draw the poligons
+
+4- create controls for move the object and the camaras
