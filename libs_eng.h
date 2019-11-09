@@ -1,11 +1,20 @@
 #ifndef LIBS_ENG
 #define LIBS_ENG
 
+#include <X11/Xlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <GL/glut.h>
 #include <math.h>
+
+typedef struct x_renderer
+{
+	Display *dis;
+	Window window;
+	int screen;
+} xrend_t;
+
 typedef struct Vertx
 {
 	float x;
@@ -55,13 +64,29 @@ typedef struct Polygon
 
 typedef struct Mesh
 {
-	vert_t **vertx;
+	vert_t *vertx;
 	polygon *polys;
+	float scala;
 	struct Transformation *transform;
 } mesh;
+
+typedef struct Scene
+{
+	struct Mesh *obj;
+	struct Camara *camara;
+	struct Viewport *viewp;
+} scene;
+
+
 mesh *readfile(char *name);
-void print_vertex(vert_t **vertices);
+void print_vertex(const vert_t *vertices);
 void print_polygons(polygon **polygons);
-vert_t project(vert_t vertice, camara *cam, viewport *viewp);
-void draw_vertex(vert_t *vertex, camara *cam, viewport *view);
+vert_t *project(vert_t *vertice, camara *cam, viewport *viewp);
+vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view, xrend_t *render);
+vert_t *transf_vertex(mesh *obj, vert_t **new_vertlist);
+vert_t sum_vec(vert_t vec1, vert_t vec2);
+vert_t sus_vec(vert_t vec1, vert_t vec2);
+vert_t mul_vec(vert_t vec1, vert_t vec2);
+vert_t div_vec(vert_t vec1, vert_t vec2);
+scene *init_engine();
 #endif /* LIBS_ENG */

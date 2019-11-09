@@ -1,16 +1,19 @@
 #include <stdio.h>
 #include "libs_eng.h"
 void print_faces(face **faces);
-void print_vertex(vert_t **vertices)
+void print_vertex(const vert_t *vertices)
 {
-	int pos = 1;
-	vert_t *v = *vertices;
+	int pos = 0;
+	const vert_t *v = vertices;
 	while (v != NULL)
 	{
-		printf("vertex #%d x: %f, y: %f, z: %f\n", pos, v->x, v->y, v->z);
+		printf("Vertex %d x: %9f, y: %9f, z: %9f\n", pos, v->x, v->y, v->z);
+		if (v->next == NULL)
+			return;
 		v = v->next;
 		pos++;
 	}
+	return;
 }
 
 void print_polygons(polygon **polygons)

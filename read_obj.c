@@ -12,6 +12,11 @@ mesh *readfile(char *name)
 	polygon *polys;
 
 	mes = malloc(sizeof(mesh));
+	if (mes == NULL)
+	{
+		printf("Pailas con la mesh\n");
+		return (NULL);
+	}
 	verx = NULL;
 	polys = NULL;
 
@@ -21,17 +26,22 @@ mesh *readfile(char *name)
 		printf("File doesn't exists %s", name);
 		return (0);
 	}
-	c = fgets(c, 100, file);
+	c = fgets(c, 99, file);
+
 	while (c != NULL)
 	{
-		if (*c == 'v' && *(c + 1) == 32)
-			get_vert(c, &verx);
-		if (*c == 'f' && *(c + 1) == 32)
-		        get_polys(c, &polys);
-		c = fgets(c,100, file);
-	}
+
+		if (*c == 'v' && *(c + 1) == ' ')
+		{
+			if (get_vert(c, &verx) == NULL)
+				printf("Paiiiilas con el vertex papa");
+		}
+		if (*c == 'f' && *(c + 1) == ' ')
+			get_polys(c, &polys);
+		c = fgets(c,99, file);
+		}
 	fclose(file);
-	mes->vertx = &verx;
+	mes->vertx = verx;
 	mes->polys = polys;
 	return (mes);
 }
@@ -39,8 +49,8 @@ mesh *readfile(char *name)
 vert_t *get_vert(char *s, vert_t **vertices)
 {
 	int p = 0, vert = 0;
-	char ver[15];
-	float verx[3];
+	char ver[40];
+	float verx[4];
 	vert_t *vertex;
 	vert_t *v = *vertices;
 
@@ -48,25 +58,32 @@ vert_t *get_vert(char *s, vert_t **vertices)
 
 	if (vertex == NULL)
 		return (NULL);
+
 	s += 2;
 	while(*s != '\0')
 	{
+
 		ver[p] = *s;
 
 		if (*s == 32 || *s == 10)
 		{
 			ver[p] = '\0';
-			verx[vert] =((float) atof(ver)) + 0.001;
+			verx[vert] =((float) atof(ver));
 			vert++;
 			p = 0;
 		}
+		else if (*s == 0)
+			break;
 		else
 			p++;
 		s++;
 	}
+
 	vertex->x = verx[0];
 	vertex->y = verx[1];
 	vertex->z = verx[2];
+	vertex->next = NULL;
+
 	if (*vertices == NULL)
 	{
 		vertex->next = *vertices;
@@ -74,8 +91,10 @@ vert_t *get_vert(char *s, vert_t **vertices)
 	}
 	else
 	{
+
 		while (v != NULL)
 		{
+
 			if (v->next == NULL)
 			{
 				v->next = vertex;
@@ -83,7 +102,9 @@ vert_t *get_vert(char *s, vert_t **vertices)
 				return (vertex);
 			}
 			v = v->next;
+
 		}
+
 	}
 	return (vertex);
 }

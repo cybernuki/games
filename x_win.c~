@@ -1,0 +1,59 @@
+#include <X11/Xlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "libs_eng.h"
+
+int main(void)
+{
+	Display *dis;
+	Window window;
+	XEvent event;
+	scene *scn = init_engine();
+	vert_t *vrtx;
+	int screen;
+
+	dis = XOpenDisplay(NULL);
+	if (dis == NULL)
+	{
+		printf("\033[31mError opening display\n\033[0m");
+		exit(1);
+	}
+	screen = DefaultScreen(dis);
+	window = XCreateSimpleWindow(dis, RootWindow(dis, screen), 0, 0,
+				     600, 600, 1, BlackPixel(dis, screen),
+				     WhitePixel(dis, screen));
+	XSelectInput(dis, window, ExposureMask | KeyPressMask);
+	XMapWindow(dis, window);
+	xrend_t *render = malloc(sizeof(xrend_t));
+	render->dis = dis;
+	render->window = window;
+	render-> screen = screen;
+	while (1)
+	{
+		XNextEvent(dis, &event);
+		if (event.type == Expose)
+		{
+			printf("%s %d:  redrawing\n", __FILE__,__LINE__);
+			vrtx = draw_vertex(scn->obj, scn->camara,
+					   scn->viewp, render);
+			int pos ='0';
+			int offs = 0;
+			while (vrtx != NULL)
+			{
+				printf("vert: %d\n", pos);
+				XFillRectangle(dis, window,
+				DefaultGC(dis, screen), vrtx->x, vrtx->y, 2 , 2);
+				XDrawString(dis, window,
+					    DefaultGC(dis, screen), vrtx->x + offs, vrtx->y, (char *) &pos, 1);
+				vrtx = vrtx->next;
+				pos++;
+				offs += 2;
+			}
+		}
+		if (event.type == KeyPress)
+			break;
+	}
+	XCloseDisplay(dis);
+	return (0);
+}

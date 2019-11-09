@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -e "\e[33mcompiling\e[0m"
+gca *.c -o w -lm -lX11
+echo -e "\e[32mDone\e[0m"

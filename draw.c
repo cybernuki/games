@@ -1,28 +1,37 @@
 #include <stdio.h>
 #include "libs_eng.h"
-
+vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view, xrend_t *rnd);
 void draw_polygons(vert_t **vertex)
 {
-	vert_t *l = *vertex;
-	glBegin(GL_POLYGON);
-	while (l != NULL)
-	{
-		glVertex2f(l->x, l->y);
-		l = l->next;
-	}
-	glEnd();
-	glFlush();
+	(void) vertex;
 }
 
-void draw_vertex(vert_t *vertex, camara *cam, viewport *view)
+vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view, xrend_t *render)
 {
-	vert_t *v = vertex;
-	int pos = 0;
-	while (v != NULL)
+	vert_t *transformed_vertx, *head;
+
+	transformed_vertx = NULL;
+	print_vertex((obj->vertx));
+	head = transf_vertex(obj, &transformed_vertx);
+        project_vertex(&head, cam, view, render);
+	print_vertex(head);
+	return (head);
+}
+
+vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view, xrend_t *rnd)
+{
+	vert_t *list = *vertx;
+	(void) rnd;
+	while (list != NULL)
 	{
-		vert_t p = project(*v, cam ,view);
-		printf("vertx # %d x: %d y: %d z: %d", pos, (int) p.x, (int) p.y,(int) p.z);
-		v = v->next;
-		pos++;
+		vert_t *pr = project(list, cam, view);
+
+		list->x = pr->x;
+		list->y = pr->y;
+		list->z = pr->z;
+				printf("\033[0m%s %d:  v: %.2f %.2f %.2f\n", __FILE__,__LINE__,
+		       list->x, list->y, list->z);
+		list = list->next;
 	}
+	return (*vertx);
 }
