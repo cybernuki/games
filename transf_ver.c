@@ -1,8 +1,14 @@
 #include "libs_eng.h"
 
+vert_t *set_center_origin(vert_t **vertx)
+{
+    return (*vertx);
+}
+
+
 vert_t rotate(vert_t vertex, mesh *obj)
 {
-	printf("%s %d:  rotating \n", __FILE__,__LINE__);
+/*	printf("%s %d:  rotating...", __FILE__,__LINE__);*/
 	double tempx = vertex.x;
 	double tempy = vertex.y;
 	double tempz = vertex.z;
@@ -35,19 +41,20 @@ vert_t rotate(vert_t vertex, mesh *obj)
 	tempz = k;
 
 	vert_t result = {tempx, tempy, tempz, NULL};
+/*	printf("rotated %.2f %.2f %.2f\n", tempx, tempy, tempz);*/
 	return (result);
 
 }
 
 vert_t scalar(vert_t vert, float scale)
 {
-	printf("%s %d:  scaling \n", __FILE__,__LINE__);
+/*	printf("%s %d:  scaling \n", __FILE__,__LINE__);*/
 	vert_t scal = {scale, scale, scale, NULL};
 	return(mul_vec(vert, scal));
 }
 vert_t translate(vert_t vert, vert_t trans)
 {
-	printf("%s %d:  translating \n", __FILE__,__LINE__);
+/*	printf("%s %d:  translating \n", __FILE__,__LINE__);*/
 	vert_t res = sum_vec(vert, trans);
 	return (res);
 }
@@ -103,21 +110,21 @@ vert_t *transf_vertex(mesh *obj, vert_t **new_vertlist)
 			obj),
 			*obj->transform->translation);
 		add_vertex_node(&newlist, dummy);
-		printf("%s %d: vert %d:  x %f y %f z %f\n",__FILE__, __LINE__,
-		       pos, dummy.x, dummy.y, dummy.z);
+/*		printf("%s %d: vert %d:  x %f y %f z %f\n",__FILE__, __LINE__,
+		pos, dummy.x, dummy.y, dummy.z);*/
 
 		vertices = vertices->next;
 		pos++;
 	}
 	if (newlist != NULL)
 	{
-		printf("%s %d:  nodes ready\n", __FILE__, __LINE__);
+		/*	printf("%s %d:  nodes ready\n", __FILE__, __LINE__);*/
 		*new_vertlist = newlist;
 		return (newlist);
 	}
 	else
 	{
-		printf("%s %d:  nodes fail\n", __FILE__, __LINE__);
+		/*	printf("%s %d:  nodes fail\n", __FILE__, __LINE__);*/
 		return (NULL);
 	}
 }

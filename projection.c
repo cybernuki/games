@@ -7,16 +7,19 @@ vert_t *project(vert_t *vertice, camara *cam, viewport *viewp)
 {
 
 	vert_t *p;
-	printf("%s %d:  initial: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);	
+/*	printf("%s %d:  initial: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);	*/
 	p = rotate_p(cam, vertice);
 
 	p = translate_p(cam, p);
 
 	p = zoom_p(cam, p);
+/*	printf("\033[36m%s %d:  zoomed: %.2f %.2f %.2f\n", __FILE__, __LINE__, p->x, p->y, p->z);	*/
 
-	p->x = (( p->x)*viewp->pos->z)/p->z;
-	p->y = (( p->y)*viewp->pos->z)/p->z;
-        p->z = (( p->z)*viewp->pos->z)/p->z;
+	p->x = (( p->x)*(viewp->pos->z + 1))/p->z;
+	p->y = (( p->y)*(viewp->pos->z + 1))/p->z;
+	p->z = (( p->z)*(viewp->pos->z + 1))/p->z;
+
+/*	printf("\033[36m%s %d:  projected: %.2f %.2f %.2f\n", __FILE__, __LINE__, p->x, p->y, p->z);	*/
 	p = pr(viewp, p);
 
 /*	printf("%s %d:  vert: %f %f %f\n", __FILE__, __LINE__, p>x, p->y, p->z);*/
@@ -24,11 +27,11 @@ vert_t *project(vert_t *vertice, camara *cam, viewport *viewp)
 }
 vert_t *pr(viewport *viewp, vert_t *point)
 {
-    printf("%s %d:  viewp: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);
+/*    printf("%s %d:  before: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);*/
 
 	point->x = ((point->x*600)/viewp->width)+300;
 	point->y = ((point->y*600)/viewp->height)+300;
-       printf("%s %d:  viewp: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);
+	/*       printf("%s %d:  viewp: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);*/
 
 
 	return (point);
@@ -39,24 +42,24 @@ vert_t *zoom_p(camara *cam, vert_t *vertice)
 {
 
         float scale = powf(cam->zoom, 2);
-	printf("\033[33m%s %d:  before zoom: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);
+/*	printf("\033[33m%s %d:  before zoom: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);*/
 	vertice->x = vertice->x * scale;
 	vertice->y = vertice->y * scale;
-	vertice->z = vertice->z * scale;
-	printf("\033[32m%s %d:  zoomed: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);
+	vertice->z = vertice->z * 1;
+/*	printf("\033[32m%s %d:  zoomed: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);*/
 	return (vertice);
 }
 
 vert_t *translate_p(camara *cam, vert_t *vertice)
 {
 
-	printf("\033[33m%s %d:  before transl: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);
+/*	printf("\033[33m%s %d:  before transl: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);*/
 
-        vertice->x += cam->center->x;
-	vertice->y += cam->center->y;
-	vertice->z += cam->center->z;
+        vertice->x += cam->center->x + cam->transform->translation->x;
+	vertice->y += cam->center->y + cam->transform->translation->y;
+	vertice->z += cam->center->z + cam->transform->translation->z;
 
-	printf("\033[33m%s %d:  translated: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);
+/*	printf("\033[33m%s %d:  translated: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);*/
 	return (vertice);
 }
 
@@ -102,7 +105,7 @@ float k = (0)*(tempx)+(sin(overx))*(tempy)+(cos(overx))*(tempz);
 	vertice->z = tempz;
 
 
-	printf("\033[34m%s %d:  rotated: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);
+/*	printf("\033[34m%s %d:  rotated: %.2f %.2f %.2f\n", __FILE__, __LINE__, vertice->x, vertice->y, vertice->z);*/
 
 	return (vertice);
 

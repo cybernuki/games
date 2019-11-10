@@ -1,27 +1,27 @@
 #include <stdio.h>
 #include "libs_eng.h"
-vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view, xrend_t *rnd);
+vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view);
 void draw_polygons(vert_t **vertex)
 {
 	(void) vertex;
 }
 
-vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view, xrend_t *render)
+vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view)
 {
 	vert_t *transformed_vertx, *head;
 
 	transformed_vertx = NULL;
-	print_vertex((obj->vertx));
+/*	print_vertex((obj->vertx));*/
 	head = transf_vertex(obj, &transformed_vertx);
-        project_vertex(&head, cam, view, render);
-	print_vertex(head);
+        project_vertex(&head, cam, view);
+/*	print_vertex(head);*/
 	return (head);
 }
 
-vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view, xrend_t *rnd)
+vert_t *project_vertex(vert_t **vertx, camara *cam, viewport *view)
 {
 	vert_t *list = *vertx;
-	(void) rnd;
+
 	while (list != NULL)
 	{
 		vert_t *pr = project(list, cam, view);

@@ -64,10 +64,11 @@ typedef struct Polygon
 
 typedef struct Mesh
 {
-	vert_t *vertx;
-	polygon *polys;
-	float scala;
-	struct Transformation *transform;
+    vert_t *vertx;
+    polygon *polys;
+    vert_t *origin;
+    float scala;
+    struct Transformation *transform;
 } mesh;
 
 typedef struct Scene
@@ -82,11 +83,14 @@ mesh *readfile(char *name);
 void print_vertex(const vert_t *vertices);
 void print_polygons(polygon **polygons);
 vert_t *project(vert_t *vertice, camara *cam, viewport *viewp);
-vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view, xrend_t *render);
+vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view);
 vert_t *transf_vertex(mesh *obj, vert_t **new_vertlist);
 vert_t sum_vec(vert_t vec1, vert_t vec2);
 vert_t sus_vec(vert_t vec1, vert_t vec2);
 vert_t mul_vec(vert_t vec1, vert_t vec2);
 vert_t div_vec(vert_t vec1, vert_t vec2);
+vert_t get_target_origin(mesh *obj);
+vert_t *set_center_origin(vert_t **vertx);
+int key_pressed(int code);
 scene *init_engine();
 #endif /* LIBS_ENG */

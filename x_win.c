@@ -4,13 +4,16 @@
 #include <string.h>
 #include "libs_eng.h"
 
+void rend(Display *dis, Window window, int screen);
+
+scene *scn;
+
 int main(void)
 {
 	Display *dis;
 	Window window;
 	XEvent event;
-	scene *scn = init_engine();
-	vert_t *vrtx;
+	scn = init_engine();
 	int screen;
 
 	dis = XOpenDisplay(NULL);
@@ -35,25 +38,41 @@ int main(void)
 		if (event.type == Expose)
 		{
 			printf("%s %d:  redrawing\n", __FILE__,__LINE__);
-			vrtx = draw_vertex(scn->obj, scn->camara,
-					   scn->viewp, render);
-			int pos ='0';
-			int offs = 0;
-			while (vrtx != NULL)
-			{
-				printf("vert: %d\n", pos);
-				XFillRectangle(dis, window,
-				DefaultGC(dis, screen), vrtx->x, vrtx->y, 2 , 2);
-				XDrawString(dis, window,
-					    DefaultGC(dis, screen), vrtx->x + offs, vrtx->y, (char *) &pos, 1);
-				vrtx = vrtx->next;
-				pos++;
-				offs += 4;
-			}
+			rend(dis, window, screen);
 		}
 		if (event.type == KeyPress)
+		{
+		    if (key_pressed(event.xkey.keycode) == 1)
+		    {
+			    rend(dis, window, screen);
+		    }
+		    if (event.xkey.keycode == 0x09)
 			break;
+		}
 	}
 	XCloseDisplay(dis);
 	return (0);
+}
+
+void rend(Display *dis, Window window, int screen)
+{
+	vert_t *vrtx;
+	XClearWindow(dis, window);
+	*(scn->camara->target) = get_target_origin(scn->obj);
+	vrtx = draw_vertex(scn->obj, scn->camara,
+			   scn->viewp);
+	int pos ='1';
+	while (vrtx != NULL)
+	{
+/*		printf("vert: %c\n", pos);*/
+		XFillRectangle(dis, window,
+		DefaultGC(dis, screen), vrtx->x, vrtx->y, 4 , 4);
+		XDrawString(dis, window, DefaultGC(dis, screen),
+			    vrtx->x, vrtx->y,
+			    (char *) &pos, 1);
+		vrtx = vrtx->next;
+		pos++;
+
+	}
+	print_polygons(&(scn->obj->polys));
 }

@@ -108,11 +108,12 @@ vert_t *get_vert(char *s, vert_t **vertices)
 	}
 	return (vertex);
 }
+polygon *split_poly(polygon **pol);
 
 polygon *get_polys(char *s, polygon **pols)
 {
-	polygon *polys, *ps = *pols;
-	int i = 0;
+	polygon *polys, *ps = *pols, *tern;
+	int i = 0, type = 0;
 	char pol[8];
 	face *faces;
 
@@ -129,16 +130,24 @@ polygon *get_polys(char *s, polygon **pols)
 			pol[i] = '\0';
 			get_face(pol, &faces);
 			i = 0;
+			type++;
 		}
 		else
 			i++;
 		s++;
 	}
+	printf("type: %d\n", type);
 	polys->faces = faces;
+
+
+	if (type == 4)
+		tern = split_poly(&polys);
+	(void) tern;
+
 
 	if (*pols == NULL)
 	{
-		polys->next = *pols;
+		polys->next->next = *pols;
 		*pols = polys;
 	}
 	else
@@ -156,6 +165,38 @@ polygon *get_polys(char *s, polygon **pols)
 	}
 	return (polys);
 }
+
+polygon *split_poly(polygon **pol)
+{
+	polygon *old = *pol;
+	polygon *new = malloc(sizeof(polygon));
+	face *one, *two , *three;
+
+	one = malloc(sizeof(face));
+	two = malloc(sizeof(face));
+	three = malloc(sizeof(face));
+
+	printf("alloced\n");
+
+	*one = *(old->faces->next);
+	printf("one\n");
+	*two =*(old->faces->next->next);
+	printf("two\n");
+	*three = *(old->faces->next->next->next);
+	printf("three\n");
+
+	one->next = two;
+	two->next = three;
+	three->next = NULL;
+
+	old->faces->next->next = old->faces->next->next->next;
+	new->faces = one;
+
+	new->next = NULL;
+	old->next = new;
+	return (new);
+}
+
 
 
 face *get_face(char *pol, face **faces)

@@ -22,8 +22,10 @@ void print_polygons(polygon **polygons)
 	polygon *p = *polygons;
 	if (p == NULL)
 		printf("pailas");
+
 	while (p != NULL)
 	{
+		printf("polygon: %d ", pos);
 		print_faces(&p->faces);
 		p = p->next;
 		pos++;
@@ -32,12 +34,15 @@ void print_polygons(polygon **polygons)
 
 void print_faces(face **faces)
 {
+	int counter = 0;
 
 	face *f = *faces;
 
 	while (f != NULL)
 	{
-		printf("%d/%d\n", f->a, f->b);
+		printf("%d/%d ", f->a, f->b);
 		f = f->next;
+		counter++;
 	}
+	printf(" size: %d\n", counter);
 }
