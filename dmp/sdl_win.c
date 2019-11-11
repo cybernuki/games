@@ -1,66 +1,68 @@
-#include <X11/Xlib.h>
+#include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "libs_eng.h"
 
-void rend(Display *display, Window window, int screen);
-void scanline(polygon **polys, vert_t **list, Display *display, Window window, int screen);
+void rend(SDL_Window *window, SDL_Renderer *renderer);
+void scanline(polygon **polys, vert_t **list, SDL_Window *window, SDL_Renderer *renderer);
 void print_v(vert_t *ver, int line);
 
 scene *scn;
 
 int main(void)
 {
-	Display *dis;
-	Window window;
-	XEvent event;
-	int screen;
-	scn = init_engine();
-	printf("Engine done\n");
-	dis = XOpenDisplay(NULL);
-	if (dis == NULL)
-	  {
-	    printf("Pailas display\n");
-	    exit(1);
-	  }
-	printf("Display Opened\n");
-	screen = DefaultScreen(dis);
-	printf("screen setted\n");
-	window = XCreateSimpleWindow(dis, RootWindow(dis, screen),10, 10 , 400, 400, 1, BlackPixel(dis, screen), WhitePixel(dis, screen));
-	screen = DefaultScreen(dis);
-	XSelectInput(dis, window, ExposureMask | KeyPressMask);
-	printf("window created\n");
-	XMapWindow(dis, window);
-	printf("map created\n");
-	
-	
-	while (1)
-	{
-	  printf("looping\n");
-	  XNextEvent(dis, &event);
-	  if (event.type == Expose)
-	  {
-	    printf("Expose\n");
-	    rend(dis, window, screen);
-	  }
-		
-	if (event.type == KeyPress)
-	{
-	  if (event.xkey.keycode == 0x99)
-	  break;
-	  key_pressed(event.xkey.keycode);
-	  rend(dis, window, screen);
-	}
-	}
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+	SDL_Event event;
 
+
+	scn = init_engine();
+	if (SDL_Init(SDL_INIT_VIDEO) > 0)
+	{
+		printf("Error\n");
+		exit(1);
+	}
+	window = SDL_CreateWindow("Games", 10, 10, 600, 600, SDL_WINDOW_SHOWN);
+	if (window == NULL)
+	{
+		printf("pailas\n");
+		exit(1);
+	}
+	renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
+	
+	printf("%s %d\n", __FILE__, __LINE__);
+/*	SDL_FillRect(sur, NULL, SDL_MapRGB(sur->format, 0xFF, 0xFF, 0xFF));
+	printf("%s %d\n", __FILE__, __LINE__);
+	SDL_UpdateWindowSurface(window);
+	printf("%s %d\n", __FILE__, __LINE__);*/
+	SDL_Delay(5000);
+/*	while (1)
+	{
+		SDL_PollEvent(&event);
+		if (event.type == SDL_QUIT)
+			break;
+		if (event.type == SDL_KEYDOWN)
+		{
+
+		    rend(window, renderer);
+		    if (event.key.keysym.sym == SDLK_ESCAPE)
+			break;
+		}
+		}*/
+
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+	(void) event;
+	
+	(void) renderer;
 	return (0);
 }
 
-void rend(Display *display, Window window, int screen)
+void rend(SDL_Window *window, SDL_Renderer *renderer)
 {
 	vert_t *vrtx;
-	XClearWindow(display, window);
+
 	*(scn->camara->target) = get_target_origin(scn->obj);
 	vrtx = draw_vertex(&(scn->obj), scn->camara,
 			   scn->viewp);
@@ -74,7 +76,7 @@ void rend(Display *display, Window window, int screen)
 	}
 
 
-	scanline(&(scn->obj->polys), &vrtx, display, window, screen);
+	scanline(&(scn->obj->polys), &vrtx, window, renderer);
 
 }
 
@@ -102,11 +104,10 @@ void print_v(vert_t *ver, int line)
 	printf("%s %d:  x: %.2f y: %.2f z: %.2f\n",__FILE__, line, ver->x, ver->y, ver->z);
 }
 
-void scanline(polygon **polys, vert_t **list, Display *display, Window window, int screen)
+void scanline(polygon **polys, vert_t **list, SDL_Window *window, SDL_Renderer *renderer)
 {
 	(void) window;
-	(void) display;
-	(void) screen;
+	(void) renderer;
 	printf("init scanline\n");
 	polygon *ps = *polys;
 	vert_t *vrtx = *list;
@@ -179,17 +180,8 @@ void scanline(polygon **polys, vert_t **list, Display *display, Window window, i
 			}
 			r = ((tmpY * X) / Y);
 			r += tmpX;
-			(void) tmpR;
 			printf("result x %.2f tmpy: %.2f\n", r, tmpY);
-			XDrawLine(display, window, DefaultGC(display, screen),
-				  arr[0]->x , arr[0]->y,
-				  arr[1]->x , arr[1]->y);
-			XDrawLine(display, window, DefaultGC(display, screen),
-				  arr[1]->x , arr[1]->y,
-				  arr[2]->x , arr[2]->y);
-			XDrawLine(display, window, DefaultGC(display, screen),
-				  arr[2]->x , arr[2]->y,
-				  arr[0]->x , arr[0]->y);
+			(void) tmpR;
 
 
 

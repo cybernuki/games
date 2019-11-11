@@ -1,4 +1,3 @@
-#include <GL/glut.h>
 #include "libs_eng.h"
 
 scene *init_engine()

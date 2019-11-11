@@ -29,8 +29,8 @@ vert_t *pr(viewport *viewp, vert_t *point)
 {
 /*    printf("%s %d:  before: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);*/
 
-	point->x = ((point->x*600)/viewp->width)+300;
-	point->y = ((point->y*600)/viewp->height)+300;
+	point->x = ((point->x*400)/viewp->width)+200;
+	point->y = ((point->y*400)/viewp->height)+200;
 	/*       printf("%s %d:  viewp: %d %d point: %.2f %.2f %.2f\n", __FILE__, __LINE__, viewp->width, viewp->height, point->x, point->y, point->z);*/
 
 

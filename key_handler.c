@@ -4,7 +4,7 @@ extern scene *scn;
 
 int key_pressed(int code)
 {
-    printf("key pressed: code %d\n", code);
+    printf("Key pressed: code %d\n", code);
     switch (code)
     {
     case 27:  /* R */
