@@ -6,7 +6,7 @@ void draw_polygons(vert_t **vertex)
 	(void) vertex;
 }
 
-vert_t *draw_vertex(mesh *obj, camara *cam, viewport *view)
+vert_t *draw_vertex(mesh **obj, camara *cam, viewport *view)
 {
 	vert_t *transformed_vertx, *head;
 

@@ -92,9 +92,9 @@ vert_t *add_vertex_node(vert_t **newlist, vert_t vertex)
 
 	return (new_vertex);
 }
-vert_t *transf_vertex(mesh *obj, vert_t **new_vertlist)
+vert_t *transf_vertex(mesh **obj, vert_t **new_vertlist)
 {
-	vert_t *vertices = obj->vertx;
+	vert_t *vertices = (*obj)->vertx;
 	vert_t *newlist;
 	vert_t  dummy;
 	int pos = 0;
@@ -106,9 +106,9 @@ vert_t *transf_vertex(mesh *obj, vert_t **new_vertlist)
 
 		dummy = translate(
 			rotate(
-			scalar(*vertices, obj->scala),
-			obj),
-			*obj->transform->translation);
+				scalar(*vertices, (*obj)->scala),
+			*obj),
+			*((*obj)->transform->translation));
 		add_vertex_node(&newlist, dummy);
 /*		printf("%s %d: vert %d:  x %f y %f z %f\n",__FILE__, __LINE__,
 		pos, dummy.x, dummy.y, dummy.z);*/
